@@ -66,4 +66,40 @@ boston
 import seaborn as sns
 sns.pairplot(boston)
 plt.show
+# This plot shows a HUGE variability throughout all 506 cities we'll be analyzing. Crime rates, accessibility to highways, pupil-teacher ratios in school, and retail industries all have incredibly good numbers in some cities, but horrible numbers in other cities. This shows me that the data is not skewed, and that it is correct information taken without heavy bias to the area of Boston.
 
+correlation_with_crim = boston.corr()['crim'].sort_values(ascending=False)
+print("Correlation with per capita crime rate (CRIM):")
+print(correlation_with_crim)
+# The crime has the highest correlation with accessibility to radial highways (rad), which makes sense because the criminals would have an easy out. Taxes are a close second, though, as they also correlate strongly with crime rates. Columns like age, indus, or pratio, on the other hand, don't have a large impact on crime rates
+
+high_crime_rate = boston[boston['crim'] > boston['crim'].mean()]
+high_tax_rate = boston[boston['tax'] > boston['tax'].mean()]
+high_pupil_teacher_ratio = boston[boston['ptratio'] > boston['ptratio'].mean()]
+
+print(f"Number of suburbs with high crime rate: {high_crime_rate.shape[0]}")
+print(f"Number of suburbs with high tax rate: {high_tax_rate.shape[0]}")
+print(f"Number of suburbs with high pupil-teacher ratio: {high_pupil_teacher_ratio.shape[0]}")
+# 128 of these Boston counties have high crime rates, which is over one quarter of the counties in question. In general, I'm seeing that Boston and the surrounding areas are not super safe places.
+# Even more of these counties have high tax rates, north of 30%! This isn't surprising, though, as Boston is a large city and there is a lot to pay for downtown.
+# More than half of these Boston school districts report high pupil-teacher ratios, giving a third strike to living in the Boston area. If I was planning to move, I would look for an alternate city.
+ 
+charles_river_count = boston[boston['chas'] == 1].shape[0]
+print(f'There are {charles_river_count} suburbs that border the Charles River')
+
+median_pupil_teacher_ratio = boston['ptratio'].median()
+print(f'The average pupil-teacher ratio is {median_pupil_teacher_ratio}')
+
+lowest_value_suburb = boston.loc[boston['medv'].idxmin()]
+print(lowest_value_suburb)
+# This city that has the lowest median value also has very high taxes, little access to highways, and a lot of crime. This is not a city I would like to reside in. It also looks like this city has a large population in a small space as well as a lot of factories, or non-retail business. This is likely an area right outside downtown Boston that would be considered the "hood". You get these in all big city outskirts.
+
+more_than_seven_rooms = boston[boston['rm'] > 7].shape[0]
+more_than_eight_rooms = boston[boston['rm'] > 8].shape[0]
+print(f'Number of suburbs averaging more than seven rooms: {more_than_seven_rooms}')
+print(f'Number of suburbs averaging more than eight rooms: {more_than_eight_rooms}')
+
+suburbs_with_more_than_eight_rooms = boston[boston['rm'] > 8]
+print("Suburbs averaging more than eight rooms:")
+print(suburbs_with_more_than_eight_rooms)
+# While there are outliers, most of these cities have low crime rates and heavy retail industry. The average age of these cities is also very high, two of them even being north of 90 years old! These are more likely nicer cities with older folks that have more money to spend on nicer houses.
